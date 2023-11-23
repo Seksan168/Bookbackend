@@ -8,11 +8,15 @@ const createBook = (req, res) => {
     const bookObj = new Book({
         title : req.body.title,
         author : req.body.author,
+        type :req.body.type,
+        isbn : req.body.isbn,
         price : req.body.price,
-        descrip : req.body.descrip,
+        info : req.body.info,
+        publishher : req.body.publishher,
+        img: req.body.img,
         review : req.body.review,
         quantity: req.body.quantity,
-        img: req.body.img
+        
     });
     Book.create(bookObj, (err, data)=>{
         if(err){
