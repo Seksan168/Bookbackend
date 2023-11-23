@@ -9,10 +9,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res)=>{
-    res.json({ message: "Welcome to the Manage Account API."});
+    res.json({ message: "Welcome to the BookStore API."});
 });
 require("./app/routes/user.routes")(app);
 require("./app/routes/file.routes")(app);
+require("./app/routes/book.routes")(app);
+require('./app/routes/review.routes')(app);
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, ()=>{
