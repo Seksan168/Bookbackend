@@ -6,11 +6,11 @@ const expireTime = "2h"; //token will expire in 2 hours
 const fs = require("fs");
 
 const User = function(user){
-    this.fullname = user.fullname;
-    this.email = user.email;
+    this.firstname = user.firstname;
+    this.lastname = user.lastname;
     this.username = user.username;
+    this.email = user.email;
     this.password = user.password;
-    this.img = user.img;
 }
 User.checkUsername = (username, result)=>{
     sql.query("SELECT * FROM users WHERE username='"+username+"'",(err,res)=>{
@@ -49,7 +49,14 @@ User.loginModel = (account, result)=>{
             return;
         }
         if(res.length){
-            const validPassword = bcrypt.compareSync(account.password, res[0].password);
+            console.log("res[0].password",res[0].password);
+            console.log("acc.name",account.password);
+        
+            const validPassword = ()=>{
+                if(account.password == res[0].password) return true;
+                else return false;
+            }
+            console.log("valid passowrd: ",validPassword);
             if(validPassword){
                 const token = jwt.sign({id: res.insertId}, scKey.secret, {expiresIn: expireTime});
                 console.log("Login success. Token: " + token);
@@ -77,71 +84,8 @@ User.getAllRecords = (result)=>{
     });
 };
 //const, var, let => function scope
-const removeOldImage = (id, result) => {
-    sql.query("SELECT * FROM users WHERE id=?", [id], (err, res)=>{
-        if(err){
-            console.log("error:" + err);
-            result(err, null);
-            return;
-        }
-        if(res.length){
-            let filePath = __basedir + "/assets/" + res[0].img;
-            try {
-                if(fs.existsSync(filePath)){
-                    fs.unlink(filePath, (e)=>{
-                        if(e){
-                            console.log("Error: " + e);
-                            return;
-                        }else{
-                            console.log("File: " + res[0].img + " was removed");
-                            return;
-                        }
-                    });
-                }else {
-                    console.log("File: " + res[0].img + " not found.")
-                    return;
-                }
-            } catch (error) {
-                console.log(error);
-                return;
-            }
-        }
-    });
-};
 
-User.updateUser = (id, data, result)=>{
-    removeOldImage(id);
-    sql.query("UPDATE users SET fullname=?, email=?, img=? WHERE id=?", 
-    [data.fullname, data.email, data.img, id], (err, res)=>{
-        if(err){
-            console.log("Error: " + err);
-            result(err, null);
-            return;
-        }
-        if(res.affectedRows == 0){
-            //NO any record update
-            result({kind: "not_found"}, null);
-            return;
-        }
-        console.log("Update user: " + {id: id, ...data});
-        result(null, {id: id, ...data});
-        return;
-    });
-};
-User.removeUser = (id, result)=>{
-    removeOldImage(id);
-    sql.query("DELETE FROM users WHERE id=?", [id], (err, res)=>{
-        if(err){
-            console.log("Query error: " + err);
-            result(err, null);
-            return;
-        }
-        if(res.affectedRows == 0){
-            result({kind: "not_found"}, null);
-            return;
-        }
-        console.log("Deleted user id: " + id);
-        result(null, {id: id});
-    } );
-};
+
+
+
 module.exports = User;

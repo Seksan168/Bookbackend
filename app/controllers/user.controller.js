@@ -27,12 +27,13 @@ const createNewUser = (req, res)=>{
     }
     const salt = bcrypt.genSaltSync(10);
     const userObj = new User({
-        fullname: req.body.fullname,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
         email: req.body.email,
         username: req.body.username,
-        password: bcrypt.hashSync(req.body.password, salt),
-        img: req.body.img
+        password: req.body.password
     });
+    console.log("user object: ", userObj);
     User.create(userObj, (err, data)=>{
         if(err){
             res.status(500).send({message: err.message || "Some error occured while creating"});
@@ -50,7 +51,7 @@ const login = (req, res)=>{
     });
     User.loginModel(acc, (err, data)=>{
         if(err){
-            if(err.kind == "not_found"){
+            if(err.kind == "User not_found"){
                 res.status(401).send({message: "Not found " + req.body.username});
             }
             else if(err.kind == "invalid_pass"){

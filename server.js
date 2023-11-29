@@ -14,7 +14,8 @@ app.get("/", (req, res)=>{
 require("./app/routes/user.routes")(app);
 require("./app/routes/file.routes")(app);
 require("./app/routes/book.routes")(app);
-require('./app/routes/review.routes')(app);
+// require('./app/routes/review.routes')(app);
+
 
 
 const PORT = process.env.PORT || 4000;

@@ -1,19 +1,17 @@
 const sql = require("./db")
 const Book = function(books){
-    this.id =book.id;
-    this.title = books.title;
-    this.author = books.author;
-    this.type = books.type;
-    this.isbn = book.isbn;
-    this.price = books.price;   
+    this.book_title = books.title;
+    this.book_language = books.language;
+    this.book_publication_date = books.publication;
+    this.book_price = books.price;
+    this.book_img = books.img;
+    this.book_edition = books.edition;
+    this.book_stock = books.stock;
+    this.Author = books.author;
     this.info = books.info;
-    this.publishher = books.publishher;
-    this.img = books.img;
-    this.review = books.review;
-    this.quantity = books.quantity; 
 }
 Book.checkBook = (id, result)=>{
-    sql.query(`SELECT * FROM books WHERE id = ${id}`,(err,res)=>{
+    sql.query(`SELECT * FROM tbl_book WHERE id = ${id}`,(err,res)=>{
         if(err){
             console.log("Error: "+err);
             result(err,null);
@@ -29,7 +27,8 @@ Book.checkBook = (id, result)=>{
 };
 
 Book.create = (newBook, result)=>{
-    sql.query("INSERT INTO books SET ?", newBook, (err, res)=>{
+    console.log('Create new book from this data:',newBook);
+    sql.query("INSERT INTO tbl_book SET ?", newBook, (err, res)=>{
         if(err){
             console.log("Query error: "+err);
             result(err, null);
@@ -41,7 +40,7 @@ Book.create = (newBook, result)=>{
 };
 
 Book.getAllBook = (result)=>{
-    sql.query("SELECT * FROM books", (err, res)=>{
+    sql.query("SELECT * FROM tbl_book", (err, res)=>{
         if(err){
             console.log("Query err: "+err);
             result(err,null);
@@ -50,8 +49,8 @@ Book.getAllBook = (result)=>{
         result(null, res);
     })
 };
-Book.deleteById = (id, result) => {
-    sql.query('DELETE FROM books WHERE id = ?', id, (err, res) => {
+Book.getById = (id,result) =>{
+    sql.query('SELECT * FROM tbl_book WHERE book_id = ?',id,(err,res) =>{
         if (err) {
             console.log('Error: ' + err);
             result(err, null);
@@ -61,7 +60,39 @@ Book.deleteById = (id, result) => {
             result({ kind: 'not_found' }, null);
             return;
         }
-        console.log('Deleted books with id: ' + id);
+        console.log('Your tbl_book with id: ' + id);
+        result(null, res);
+        console.log(res);
+
+    });
+},
+Book.checkBookByTitle = (title, result) => {
+    sql.query("SELECT * FROM tbl_book WHERE book_title = ?", [title], (err, res) => {
+        if (err) {
+            console.error("Error: " + err);
+            result(err, null);
+            return;
+        }
+        if (res.length) {
+            console.log("Found Book: " + res[0]);
+            result(null, res[0]);
+            return;
+        }
+        result({ kind: "Book_not_found" }, null);
+    });
+},
+Book.deleteById = (id, result) => {
+    sql.query('DELETE FROM tbl_book WHERE id = ?', id, (err, res) => {
+        if (err) {
+            console.log('Error: ' + err);
+            result(err, null);
+            return;
+        }
+        if (res.affectedRows == 0) {
+            result({ kind: 'not_found' }, null);
+            return;
+        }
+        console.log('Deleted tbl_book with id: ' + id);
         result(null, res);
     });
 };

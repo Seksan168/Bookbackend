@@ -3,8 +3,9 @@ module.exports ={
     // USER: "root",
     // PASSWORD: "",
     // DB: "myapi"
-    HOST: "sql.freedb.tech",
-    USER: "freedb_user_api",
-    PASSWORD: "%B&2#Sn598uz?jU",
-    DB: "freedb_myapi_db"
+    host: "85.10.205.173",
+    port: 3306,
+    user: "guide168",
+    password: "Guide2547",
+    database: "bookstoreproject",
 };
