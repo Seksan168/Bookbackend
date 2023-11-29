@@ -66,7 +66,7 @@ Book.getById = (id,result) =>{
 
     });
 },
-Book.checkBookByTitle = (title, result) => {
+Book.searchBookByTitle = (title, result) => {
     sql.query("SELECT * FROM tbl_book WHERE book_title = ?", [title], (err, res) => {
         if (err) {
             console.error("Error: " + err);

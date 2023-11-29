@@ -59,6 +59,7 @@ const createBook = (req, res) => {
                 }
             } else {
                 res.send({ message: `Books with id ${findById} was found successfully. `});
+                
             }
         });
     };
@@ -91,7 +92,6 @@ const createBook = (req, res) => {
             if (!book) {
                 return res.status(404).json({ message: `Book with title '${title}' not found` });
             }
-    
             res.json({ book });
         });
     };
